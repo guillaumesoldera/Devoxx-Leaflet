@@ -25,6 +25,8 @@
                 color: white
             }
         </style>
+        <script src="data.js"></script>
+        <script src="isochrones.js"></script>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
             integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
             crossorigin=""/>
@@ -32,12 +34,32 @@
             integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
             crossorigin=""></script>
         <script type="text/javascript">
+
+            function barsLayer() {
+                var barLayerGroup = bars.map(bar => {
+                    return L.marker(
+                        [bar.geometry.location.lat,bar.geometry.location.lng],
+                        {
+                            title: bar.name
+                        }
+                    ).bindPopup(bar.name);
+                })
+                return L.layerGroup(barLayerGroup);
+            }
+
+            function isochronesLayer() {
+                var isochronesLayerGroup = isochrones.isochrones.map(iso => {
+                    return L.geoJSON(iso.geojson);
+                })
+                return L.layerGroup(isochronesLayerGroup);
+            }
+
             function init(){
                 // Kinepolis
                 var lat = 51.2459082;
                 var lng = 4.4162091;
-                var zoomLevel;
-                var map = L.map('map').setView([lat, lng], 16);
+                var zoomLevel = 13;
+                var map = L.map('map').setView([lat, lng], zoomLevel);
                 // z => niveau de zoom
                 // x,y => coordonnées du tiles
                 // r => retina
@@ -82,6 +104,8 @@
                     attribution: '&copy; <a href="http://openptmap.org/" target="_blank" rel="noopener noreferrer">OpenPTMap</a> / <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OSM Contributors</a>',
                     maxZoom: 22,
                 })
+                var barsOverlay = barsLayer()
+                var isochronesOverlay = isochronesLayer();
                 //osmLayer.addTo(map);
                 var controlLayer = L.control.layers({
                     'OpenStreetMap': osmLayer,
@@ -89,10 +113,13 @@
                     'Stamen': stamenToner,
                     'GrayScale': grayScaleLayer
                 }, {
-                    'Transport': transportLayer
+                    'Transport': transportLayer,
+                    'Bars': barsOverlay,
+                    'Isochrones': isochronesOverlay
                 })
                 map.addLayer(mainLayer);
                 controlLayer.addTo(map);
+                
                 //stamenToner.addTo(map);
                 //transportAntwerpen.addTo(map);
                 //OpenRailwayMap.addTo(map);
@@ -114,7 +141,7 @@
                 );
                 devoxxMarker.bindPopup("<div class='devoxx-popup'>Devoxx is here ! <br><img src='DevoxxLogo.png'></div>", {className: 'devoxx-popup-container'})
                 devoxxMarker.bindTooltip("<span>Devoxx Location (Kinepolis)</span>")
-                devoxxMarker.addTo(map)
+                devoxxMarker.addTo(map);
             }
         </script>
     </head>

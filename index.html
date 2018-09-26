@@ -24,9 +24,36 @@
                 background-color: black;
                 color: white
             }
+            .info {
+                padding: 6px 8px;
+                font: 14px/16px Arial, Helvetica, sans-serif;
+                background: white;
+                background: rgba(255,255,255,0.8);
+                box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                border-radius: 5px;
+            }
+            .info h4 {
+                margin: 0 0 5px;
+                color: #777;
+            }
+            .legend {
+                line-height: 18px;
+                color: #555;
+                padding: 10px;
+                padding-top: 5px;
+            }
+            .legend i {
+                width: 18px;
+                height: 18px;
+                float: left;
+                margin-right: 8px;
+                opacity: 0.7;
+            }
+
         </style>
         <script src="data.js"></script>
         <script src="isochrones.js"></script>
+        <script src="journey.js"></script>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
             integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
             crossorigin=""/>
@@ -34,6 +61,39 @@
             integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
             crossorigin=""></script>
         <script type="text/javascript">
+
+            var colors = [
+                //"#D5DDF1",
+                //"#BCCBE0",
+                //"#6F798E",
+                //"#34607C",
+                "#85c1e9",
+                "#5dade2",
+                "#3498db",
+                "#2e86c1",
+                "#2874a6",
+                "#21618c",
+                "#1b4f72"
+            ]
+
+            var gradientColors = [
+                "#F9F871",
+                "#B9F68D",
+                "#83EDAF",
+                "#5FDFCA",
+                "#60CED6",
+                "#79BBD2"
+            ]
+
+            var matchingGradient = [
+                "#79BBD2",
+                "#71A6CE",
+                "#788FC2",
+                "#8676AD",
+                "#925C8E",
+                "#944367",
+            ]
+
 
             function barsLayer() {
                 var barLayerGroup = bars.map(bar => {
@@ -48,18 +108,84 @@
             }
 
             function isochronesLayer() {
-                var isochronesLayerGroup = isochrones.isochrones.map(iso => {
-                    return L.geoJSON(iso.geojson);
+                var isochronesLayerGroup = isochrones.isochrones.map((iso, idx) => {
+                    const color = matchingGradient[idx];
+                    return L.geoJSON(iso.geojson, {
+                        style: {
+                            fillColor: color,
+                            weight: 1,
+                            opacity: 0.9,
+                            color: color,
+                            fillOpacity: 0.8,
+                        }, attribution: '&copy; Navitia'
+                    });
                 })
                 return L.layerGroup(isochronesLayerGroup);
+            }
+
+            function toMin(durationInSec) {
+                return Math.round((durationInSec / 60)) + 'min.'
+            }
+
+            function legend() {
+                var legend = L.control({position: 'bottomright'});
+
+                legend.onAdd = function (map) {
+
+                    var div = L.DomUtil.create('div', 'info legend');
+                    div.innerHTML = '<h4>Travel time legend</h4>'
+
+                    isochrones.isochrones.forEach((iso, idx, allTab) => {
+                        var text = toMin(iso.min_duration) + '&dash;' + toMin(iso.max_duration)
+                        div.innerHTML +=
+                        '<i style="background:' + matchingGradient[idx] + '"></i> ' +
+                            text + (idx !== allTab.length - 1 ? '<br>' : '');
+                    })
+                    return div;
+                };
+
+                return legend;
+            }
+
+            function journeyLine() {
+                var multiLines = journey.journeys.map(j => {
+                    
+                    var latlngs = j.sections.map(s => {
+                        return s.geojson.coordinates.map(coord => {
+                            return [coord[1], coord[0]]
+                        })
+                    })
+                    var line = L.polyline(latlngs, {color: 'yellow', weight: 12, attribution: '&copy; Navitia'}).bindPopup('Duration : ~' + toMin(j.duration));
+                    line.on('mouseover', function () {
+                        line.setStyle({color: 'red'})
+                    })
+                    line.on('mouseout', function () {
+                        line.setStyle({color: 'yellow'})
+                    })
+                    return line
+                })
+                return L.layerGroup(multiLines);
             }
 
             function init(){
                 // Kinepolis
                 var lat = 51.2459082;
                 var lng = 4.4162091;
+
+
+                // Station Antwerpen Centraal
+                var stationLat = 51.217222;
+                var stationLng = 4.421111;
+
                 var zoomLevel = 13;
                 var map = L.map('map').setView([lat, lng], zoomLevel);
+                var stationMarker = L.marker(
+                    [stationLat, stationLng],
+                    {
+                        title: "Antwerpen Centraal"
+                    }
+                );
+                stationMarker.addTo(map);
                 // z => niveau de zoom
                 // x,y => coordonnées du tiles
                 // r => retina
@@ -104,25 +230,34 @@
                     attribution: '&copy; <a href="http://openptmap.org/" target="_blank" rel="noopener noreferrer">OpenPTMap</a> / <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OSM Contributors</a>',
                     maxZoom: 22,
                 })
+
                 var barsOverlay = barsLayer()
-                var isochronesOverlay = isochronesLayer();
-                //osmLayer.addTo(map);
+
+                var journeyOverlay = journeyLine();
+                journeyOverlay.addTo(map);
+
+                var isochronesOverlay = isochronesLayer();                
+                var legendControl = legend()
+                isochronesOverlay.on('add', function() {
+                    legendControl.addTo(map);
+                });
+                isochronesOverlay.on('remove', function() {
+                    legendControl.remove();
+                });
+
+
                 var controlLayer = L.control.layers({
                     'OpenStreetMap': osmLayer,
                     'Wikimedia': mainLayer,
                     'Stamen': stamenToner,
                     'GrayScale': grayScaleLayer
                 }, {
+                    'Travel time': isochronesOverlay,
                     'Transport': transportLayer,
                     'Bars': barsOverlay,
-                    'Isochrones': isochronesOverlay
                 })
                 map.addLayer(mainLayer);
                 controlLayer.addTo(map);
-                
-                //stamenToner.addTo(map);
-                //transportAntwerpen.addTo(map);
-                //OpenRailwayMap.addTo(map);
                 var customIcon = L.icon({
                     iconUrl: 'devoxxMarker.png',
                     //shadowUrl: 'icon-shadow.png',

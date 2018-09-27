@@ -516,5 +516,265 @@ const bars = [
             "name": "Steakhouse Hoeveke",
             "rating": 4,
             "vicinity": "Hoogveldweg 135, Lier"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 51.175595,
+                    "lng": 4.3546364
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+            "id": "6af7b8cff09f69aa14349ea64bfbad4419ca13f4",
+            "name": "Jeugdhuis Joh",
+            "rating": 4.2,
+            "vicinity": "Oudestraat 81"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 51.2106319,
+                    "lng": 4.3979377
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+            "id": "1c0aaeca5ac1405d14751c34362c83951506f3db",
+            "name": "Café Baron",
+            "rating": 4.2,
+            "vicinity": "Marnixplaats 5, Antwerpen"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 51.2209076,
+                    "lng": 4.4028698
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/cafe-71.png",
+            "id": "47e6c283d33b7f3943ab63d0c7a190a79144bd59",
+            "name": "Café De Leeuw van Vlaanderen",
+            "rating": 4.1,
+            "vicinity": "Jezuïetenrui 1, Antwerpen"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 51.270903,
+                    "lng": 4.298518
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+            "id": "359bc4a8d7ee74c6017270c35c0a7389e8348e39",
+            "name": "Bebronna",
+            "rating": 4.1,
+            "vicinity": "Ketenislaan 1, Kallo"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 51.28228739999999,
+                    "lng": 4.443535899999999
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+            "id": "88294bd7672c92b0470c4ae574061d3f3d07778f",
+            "name": "Brasserie Hof de Bist",
+            "rating": 3.9,
+            "vicinity": "Veltwijcklaan 254, Antwerpen"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 51.1015469,
+                    "lng": 4.368651499999999
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+            "id": "5b3c36816c5d903c712f8f649521a410a743e543",
+            "name": "Marco Polo",
+            "rating": 2.3,
+            "vicinity": "Antwerpsestraat 420, Boom"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 51.2206966,
+                    "lng": 4.4005048
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+            "id": "67728acc6699fb5b5f3e928c5ed4f916b6b9a0be",
+            "name": "Paters Vaetje",
+            "rating": 4.4,
+            "vicinity": "Blauwmoezelstraat 1, Antwerpen"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 51.2177261,
+                    "lng": 4.4184342
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+            "id": "10a78e1b6cfd223411f957d4b3b831edbdfc1ea1",
+            "name": "Kelly's Irish Pub",
+            "rating": 4,
+            "vicinity": "De Keyserlei 27, Antwerpen"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 51.2095144,
+                    "lng": 4.3906768
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+            "id": "06def78a9e856cdf5db623bd55aa219964eeaec5",
+            "name": "L'Entrepot du Congo",
+            "rating": 3.8,
+            "vicinity": "Vlaamsekaai 42, Antwerpen"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 51.2221639,
+                    "lng": 4.2825481
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+            "id": "f92c768b0fb954b1d17022de9530f89982dfa34a",
+            "name": "Jeugdhuis Djem",
+            "rating": 4.2,
+            "vicinity": "Dambrugstraat 5, Beveren"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 51.1860489,
+                    "lng": 4.4235257
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+            "id": "00884959a8e8fbd794c57605e349ec4683606dd9",
+            "name": "Chasse Royale",
+            "rating": 4,
+            "vicinity": "117/A, Elisabethlaan"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 51.19339689999999,
+                    "lng": 4.4111781
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+            "id": "ca50debf05a048b603c03f2d773b26ef61fd5bd3",
+            "name": "Taverne 't Zonlicht",
+            "rating": 4.1,
+            "vicinity": "Desguinlei 18, Antwerpen"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 51.210548,
+                    "lng": 4.39197
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+            "id": "42363290a22e189b3f1d2c9273ebb1b9fee93f57",
+            "name": "Zurich",
+            "rating": 3.9,
+            "vicinity": "Verlatstraat 2, Antwerpen"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 51.231127,
+                    "lng": 4.412485999999999
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+            "id": "8474113639528e39a1ebd9f5ed793e8366092868",
+            "name": "Basic Italian",
+            "rating": 4,
+            "vicinity": "Londenstraat 45, Antwerpen"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 51.2177641,
+                    "lng": 4.4183644
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+            "id": "d8ab3962cd95d2f23f0126fe91b4cf527490cdc4",
+            "name": "the Popcorn",
+            "rating": 4,
+            "vicinity": "De Keyserlei 25, Antwerpen"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 51.23630790000001,
+                    "lng": 4.6914743
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+            "id": "fe001b76e417a06c87259b8c0bee324a6d6c3779",
+            "name": "7Senses",
+            "rating": 4,
+            "vicinity": "Langestraat 219, Zandhoven"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 51.3076737,
+                    "lng": 4.5068823
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+            "id": "70af8c148e719a76d36fadcea30fd38eb205a157",
+            "name": "De Koperen Pan",
+            "rating": 3.9,
+            "vicinity": "Bredabaan 600, Brasschaat"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 51.22029140000001,
+                    "lng": 4.627907599999999
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/generic_business-71.png",
+            "id": "1fbd3b0858b347f6ab858e3bb48dfbbc6fc1b3ce",
+            "name": "DOORNE LANDEN",
+            "rating": 4.6,
+            "vicinity": "Hallebaan 23, Oelegem"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 51.244174,
+                    "lng": 4.676549
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+            "id": "014a10b5f021eccc50160c228ca1ce0f976f0bc3",
+            "name": "Boshuisje('t)",
+            "rating": 4.2,
+            "vicinity": "Boshuisweg 1, Zoersel"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 51.2212501,
+                    "lng": 4.421775900000001
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/generic_business-71.png",
+            "id": "c1c8b9adb1aa9df40d0584f9d88a6d5359b9ab36",
+            "name": "The Kinkys",
+            "rating": 4.2,
+            "vicinity": "Lange Beeldekensstraat 10, Antwerpen"
         }
     ];

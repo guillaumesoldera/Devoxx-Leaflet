@@ -185,7 +185,12 @@
                         title: "Antwerpen Centraal"
                     }
                 );
-                stationMarker.addTo(map);
+
+                var journeyOverlay = journeyLine();
+                //journeyOverlay.addTo(map);
+
+                var stationJourneyLayer = L.layerGroup([journeyOverlay, stationMarker])
+                //stationMarker.addTo(map);
                 // z => niveau de zoom
                 // x,y => coordonnées du tiles
                 // r => retina
@@ -233,9 +238,6 @@
 
                 var barsOverlay = barsLayer()
 
-                var journeyOverlay = journeyLine();
-                journeyOverlay.addTo(map);
-
                 var isochronesOverlay = isochronesLayer();                
                 var legendControl = legend()
                 isochronesOverlay.on('add', function() {
@@ -255,6 +257,7 @@
                     'Travel time': isochronesOverlay,
                     'Transport': transportLayer,
                     'Bars': barsOverlay,
+                    'Station': stationJourneyLayer,
                 })
                 map.addLayer(mainLayer);
                 controlLayer.addTo(map);

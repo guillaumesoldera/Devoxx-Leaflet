@@ -155,7 +155,7 @@
                             return [coord[1], coord[0]]
                         })
                     })
-                    var line = L.polyline(latlngs, {color: 'yellow', weight: 12, attribution: '&copy; Navitia'}).bindPopup('Duration : ~' + toMin(j.duration));
+                    var line = L.polyline(latlngs, {opacity: 0.7, color: 'yellow', weight: 12, attribution: '&copy; Navitia'}).bindPopup('Duration : ~' + toMin(j.duration));
                     line.on('mouseover', function () {
                         line.setStyle({color: 'red'})
                     })

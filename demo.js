@@ -99,12 +99,12 @@ function init(){
         {
             title: "Antwerpen Centraal"
         }
-    );
+    ).bindPopup('Hello station');
+    var circle = L.circle([stationLat, stationLng], 2000, {color: 'red'});
 
     var journeyOverlay = journeyLine();
-    //journeyOverlay.addTo(map);
 
-    var stationJourneyLayer = L.layerGroup([journeyOverlay, stationMarker])
+    var stationJourneyLayer = L.layerGroup([journeyOverlay, circle, stationMarker])
     
     /*
     Tiles are numbered as {z}/{x}/{y} or {z}/{x}/{y}{r}, where
@@ -127,6 +127,13 @@ function init(){
     });
     // Stamen Layer
     var stamenToner = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {
+        attribution: 'Map tiles by Stamen Design, CC BY 3.0 — Map data © OpenStreetMap',
+        subdomains: 'abcd',
+        minZoom: 0,
+        maxZoom: 20,
+        ext: 'png'
+    });
+    var waterColor =  L.tileLayer('http://b.tile.stamen.com/watercolor/{z}/{x}/{y}.png', {
         attribution: 'Map tiles by Stamen Design, CC BY 3.0 — Map data © OpenStreetMap',
         subdomains: 'abcd',
         minZoom: 0,
@@ -163,6 +170,7 @@ function init(){
         'OpenStreetMap': osmLayer,
         'Wikimedia': mainLayer,
         'Stamen': stamenToner,
+        'WaterColor': waterColor,
         'GrayScale': grayScaleLayer
     }, {
         'Travel time': isochronesOverlay,

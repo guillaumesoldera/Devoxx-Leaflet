@@ -1,0 +1,12 @@
+{
+    "name": "data-leaflet",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "dependencies": {
+      "csv-parser": "1.11.0",
+      "node-line-reader": "^0.0.3"
+    },
+    "license": "ISC"
+  }
+  

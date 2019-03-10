@@ -5,20 +5,105 @@
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
         
         <link rel="stylesheet" href="assets/leaflet-1.3.4/leaflet.css"/>
-        <script src="assets/leaflet-1.3.4/leaflet.js"></script>
-
+        <link rel="stylesheet" href="https://cdn.rawgit.com/socib/Leaflet.TimeDimension/master/dist/leaflet.timedimension.control.min.css" />
         <link rel="stylesheet" href="assets/css/style.css"/>
+
+        <script src="assets/leaflet-1.3.4/leaflet.js"></script>
+        <script src="assets/js/leaflet-heat.js"></script>
+        <script type="text/javascript" src="assets/iso8601.min.js"></script>
+        <script type="text/javascript" src="assets/leaflet.timedimension.min.js"></script>
+
+
+        <!--
+        <script src="datas/heats/2012-7.js"></script>
+        <script src="datas/heats/2012-8.js"></script>
+        <script src="datas/heats/2012-9.js"></script>
+        <script src="datas/heats/2012-10.js"></script>
+        <script src="datas/heats/2012-11.js"></script>
+        <script src="datas/heats/2012-12.js"></script>
+        <script src="datas/heats/2013-1.js"></script>
+        <script src="datas/heats/2013-2.js"></script>
+        <script src="datas/heats/2013-3.js"></script>
+        <script src="datas/heats/2013-4.js"></script>
+        <script src="datas/heats/2013-5.js"></script>
+        <script src="datas/heats/2013-6.js"></script>
+        <script src="datas/heats/2013-7.js"></script>
+        <script src="datas/heats/2013-8.js"></script>
+        <script src="datas/heats/2013-9.js"></script>
+        <script src="datas/heats/2013-10.js"></script>
+        <script src="datas/heats/2013-11.js"></script>
+        <script src="datas/heats/2013-12.js"></script>
+        <script src="datas/heats/2014-1.js"></script>
+        <script src="datas/heats/2014-2.js"></script>
+        <script src="datas/heats/2014-3.js"></script>
+        <script src="datas/heats/2014-4.js"></script>
+        <script src="datas/heats/2014-5.js"></script>
+        <script src="datas/heats/2014-6.js"></script>
+        <script src="datas/heats/2014-7.js"></script>
+        <script src="datas/heats/2014-8.js"></script>
+        <script src="datas/heats/2014-9.js"></script>
+        <script src="datas/heats/2014-10.js"></script>
+        <script src="datas/heats/2014-11.js"></script>
+        <script src="datas/heats/2014-12.js"></script>
+        <script src="datas/heats/2015-1.js"></script>
+        <script src="datas/heats/2015-2.js"></script>
+        <script src="datas/heats/2015-3.js"></script>
+        <script src="datas/heats/2015-4.js"></script>
+        <script src="datas/heats/2015-5.js"></script>
+        <script src="datas/heats/2015-6.js"></script>
+        <script src="datas/heats/2015-7.js"></script>
+        <script src="datas/heats/2015-8.js"></script>
+        <script src="datas/heats/2015-9.js"></script>
+        <script src="datas/heats/2015-10.js"></script>
+        <script src="datas/heats/2015-11.js"></script>
+        <script src="datas/heats/2015-12.js"></script>
+        -->
+        <script src="datas/heats/2016-1.js"></script>
+        <script src="datas/heats/2016-2.js"></script>
+        <script src="datas/heats/2016-3.js"></script>
+        <script src="datas/heats/2016-4.js"></script>
+        <script src="datas/heats/2016-5.js"></script>
+        <script src="datas/heats/2016-6.js"></script>
+        <script src="datas/heats/2016-7.js"></script>
+        <script src="datas/heats/2016-8.js"></script>
+        <script src="datas/heats/2016-9.js"></script>
+        <script src="datas/heats/2016-10.js"></script>
+        <script src="datas/heats/2016-11.js"></script>
+        <script src="datas/heats/2016-12.js"></script>
+        <script src="datas/heats/2017-1.js"></script>
+        <script src="datas/heats/2017-2.js"></script>
+        <script src="datas/heats/2017-3.js"></script>
+        <script src="datas/heats/2017-4.js"></script>
+        <script src="datas/heats/2017-5.js"></script>
+        <script src="datas/heats/2017-6.js"></script>
+        <script src="datas/heats/2017-7.js"></script>
+        <script src="datas/heats/2017-8.js"></script>
+        <script src="datas/heats/2017-9.js"></script>
+        <script src="datas/heats/2017-10.js"></script>
+        <script src="datas/heats/2017-11.js"></script>
+        <script src="datas/heats/2017-12.js"></script>
+        <script src="datas/heats/2018-1.js"></script>
+        <script src="datas/heats/2018-2.js"></script>
+        <script src="datas/heats/2018-3.js"></script>
+        <script src="datas/heats/2018-4.js"></script>
+        <script src="datas/heats/2018-5.js"></script>
+        <script src="datas/heats/2018-6.js"></script>
+        <script src="datas/heats/2018-7.js"></script>
+        <script src="datas/heats/2018-8.js"></script>
+        <script src="datas/heats/2018-9.js"></script>
 
 
         <script src="datas/data.js"></script>
         <script src="datas/isochrones.js"></script>
         <script src="datas/journey.js"></script>
+        <script src="datas/heats.js"></script>
+        <script src="timedimension-heatmap.js"></script>
         <script src="demo.js"></script>
 
     </head>
     <body onload="init()">
         <nav>
-            <img src="assets/images/devoxx_brand.gif" width="183" height="25" class="responsive-img logo-vis" alt="Devoxx Belgium">
+            <img src="assets/images/devoxx_brand.gif" width="183" height="25" class="responsive-img logo-vis" alt="Devoxx France">
             <h1>Leaflet</h1>
             <span class="twitter-account">@gsoldera</span>
         </nav>

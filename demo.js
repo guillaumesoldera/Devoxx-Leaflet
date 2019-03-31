@@ -97,29 +97,21 @@ function init(){
     var stationLng = 2.320752;
 
     var zoomLevel = 13;
-    var map = L.map('map', {
-        timeDimension: true,
-        timeDimensionOptions: {
-            timeInterval: '2016-01-01T13:00:00Z/2018-09-01T15:30:00Z',
-            period: 'P1M',
-            currentTime: 1343826000000
-        },
-        timeDimensionControl: true
-    }).setView([lat, lng], zoomLevel);
+    var map = L.map('map').setView([lat, lng], zoomLevel);
     var stationMarker = L.marker(
         [stationLat, stationLng],
         {
-            title: "Antwerpen Centraal"
+            title: "Montparnasse"
         }
     ).bindPopup('Hello station');
     var circle = L.circle([stationLat, stationLng], 2000, {color: 'red'});
 
     var journeyOverlay = journeyLine();
 
-    var stationJourneyLayer = L.layerGroup([journeyOverlay, circle, stationMarker])
+    var stationJourneyLayer = L.layerGroup([circle, journeyOverlay, stationMarker])
 
-    var timeDimensionHeatmap = L.timeDimension.layer.HeatMap({datas, attribution: '&copy; <a href="https://opendata.paris.fr">OpenDataParis</a> contributors',});
-    timeDimensionHeatmap.addTo(map);
+    var timeDimensionHeatmap = L.timeDimension.layer.HeatMap({attribution: '&copy; <a href="https://opendata.paris.fr">OpenDataParis</a> contributors',});
+
     
     /*
     Tiles are numbered as {z}/{x}/{y} or {z}/{x}/{y}{r}, where
@@ -200,7 +192,7 @@ function init(){
         'Transport': transportLayer,
         'Bars': barsOverlay,
         'Station': stationJourneyLayer,
-        //'heat': heat
+        'Time dimension': timeDimensionHeatmap
     })
     
     mainLayer.addTo(map);

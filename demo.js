@@ -15,7 +15,7 @@ function toMin(durationInSec) {
 
 
 function barsLayer() {
-    var barLayerGroup = bars.map(bar => {
+    var markersBar = bars.map(bar => {
         return L.marker(
             [bar.geometry.location.lat,bar.geometry.location.lng],
             {
@@ -23,7 +23,10 @@ function barsLayer() {
             }
         ).bindPopup(bar.name);
     })
-    return L.layerGroup(barLayerGroup);
+    var markerClusterGroup = L.markerClusterGroup();
+    markerClusterGroup.addLayers(markersBar)
+    return markerClusterGroup;
+    //return L.layerGroup(markersBar);
 }
 
 function isochronesLayer() {
@@ -121,9 +124,12 @@ function init(){
         - r is for retina screen
     */
    
-    var tempLayer = L.tileLayer('https://c.tile.openweathermap.org/map/temp/{z}/{x}/{y}.png?appid=06aac0fd4ba239a20d824ef89602f311', {
+    /*var tempLayer = L.tileLayer('https://c.tile.openweathermap.org/map/temp/{z}/{x}/{y}.png?appid=06aac0fd4ba239a20d824ef89602f311', {
         attribution: '&copy; <a href="https://openweathermap.org">OpenWeatherMap</a> contributors',
         opacity: '0.5'
+    })*/
+    var tempLayer = L.tileLayer('https://a.sat.owm.io/vane/2.0/weather/TA2/{z}/{x}/{y}?appid=9de243494c0b295cca9337e1e96b00e2&fill_bound', {
+        attribution: '&copy; <a href="https://openweathermap.org">OpenWeatherMap</a> contributors'
     })
 
     // OpenStreetMap

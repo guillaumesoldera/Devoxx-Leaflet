@@ -5,6 +5,7 @@ var matchingGradient = [
     "#8676AD",
     "#925C8E",
     "#944367",
+    "#7e3957"
 ]
 
 function toMin(durationInSec) {
@@ -14,7 +15,7 @@ function toMin(durationInSec) {
 
 
 function barsLayer() {
-    var barLayerGroup = bars.map(bar => {
+    var markersBar = bars.map(bar => {
         return L.marker(
             [bar.geometry.location.lat,bar.geometry.location.lng],
             {
@@ -22,7 +23,10 @@ function barsLayer() {
             }
         ).bindPopup(bar.name);
     })
-    return L.layerGroup(barLayerGroup);
+    var markerClusterGroup = L.markerClusterGroup();
+    markerClusterGroup.addLayers(markersBar)
+    return markerClusterGroup;
+    //return L.layerGroup(markersBar);
 }
 
 function isochronesLayer() {
@@ -59,10 +63,12 @@ function legend() {
 
 function journeyLine() {
     var multiLines = journey.journeys.map(j => {
-        var latlngs = j.sections.map(s => {
-            return s.geojson.coordinates.map(coord => {
-                return [coord[1], coord[0]]
-            })
+        var latlngs = j.sections.filter(s => s.type !== "waiting").map(s => {
+            if (s.geojson !== undefined) {
+                return s.geojson.coordinates.map(coord => {
+                    return [coord[1], coord[0]]
+                })
+            }
         })
         var line = L.polyline(latlngs, {
             opacity: 0.8,
@@ -83,36 +89,51 @@ function journeyLine() {
 }
 
 function init(){
-    // Kinepolis Location
-    var lat = 51.2459082;
-    var lng = 4.4162091;
+    // Palais des Congrès Location
+    var lat = 48.877179;
+    var lng = 2.280502;
 
 
-    // Station Antwerpen Centraal
-    var stationLat = 51.217222;
-    var stationLng = 4.421111;
+    // Gare Montparnasse
+    var stationLat = 48.839268;
+    var stationLng = 2.320752;
 
     var zoomLevel = 13;
     var map = L.map('map').setView([lat, lng], zoomLevel);
     var stationMarker = L.marker(
         [stationLat, stationLng],
         {
-            title: "Antwerpen Centraal"
+            title: "Montparnasse"
+        }
+    ).bindPopup('Hello station');
+    var circle = L.circle([stationLat, stationLng], 2000, {color: 'red'});
+
+    var journeyOverlay = journeyLine();
+
+    var stationJourneyLayer = L.layerGroup([circle, journeyOverlay, stationMarker])
+
+    var timeDimensionHeatmap = L.timeDimension.layer.HeatMap(
+        {
+            attribution: '&copy; <a href="https://opendata.paris.fr">OpenDataParis</a> contributors'
         }
     );
 
-    var journeyOverlay = journeyLine();
-    //journeyOverlay.addTo(map);
-
-    var stationJourneyLayer = L.layerGroup([journeyOverlay, stationMarker])
-    //stationMarker.addTo(map);
-    // z => niveau de zoom
-    // x,y => coordonnées du tiles
-    // r => retina
-
+    
     /*
-    Tiles are numbered as {z}/{x}/{y}, where z is zoom, x is the tile number from left to right, and y is the tile number from top to bottom.
+    Tiles are numbered as {z}/{x}/{y} or {z}/{x}/{y}{r}, where
+        - z is zoom,
+        - x is the tile number from left to right,
+        - y is the tile number from top to bottom.
+        - r is for retina screen
     */
+   
+    /*var tempLayer = L.tileLayer('https://c.tile.openweathermap.org/map/temp/{z}/{x}/{y}.png?appid=06aac0fd4ba239a20d824ef89602f311', {
+        attribution: '&copy; <a href="https://openweathermap.org">OpenWeatherMap</a> contributors',
+        opacity: '0.5'
+    })*/
+    var tempLayer = L.tileLayer('https://a.sat.owm.io/vane/2.0/weather/TA2/{z}/{x}/{y}?appid=9de243494c0b295cca9337e1e96b00e2&fill_bound', {
+        attribution: '&copy; <a href="https://openweathermap.org">OpenWeatherMap</a> contributors'
+    })
 
     // OpenStreetMap
     var osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -133,10 +154,22 @@ function init(){
         maxZoom: 20,
         ext: 'png'
     });
+    var waterColor =  L.tileLayer('http://b.tile.stamen.com/watercolor/{z}/{x}/{y}.png', {
+        attribution: 'Map tiles by Stamen Design, CC BY 3.0 — Map data © OpenStreetMap',
+        subdomains: 'abcd',
+        minZoom: 0,
+        maxZoom: 20,
+        ext: 'png'
+    });
     // Gray Scale layer
     var grayScaleLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
         id: 'mapbox.light',
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'
+    })
+
+    // Satellite layer
+    var satelliteLayer = L.tileLayer('http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'ESRI'
     })
     
     // Public Transport
@@ -157,26 +190,32 @@ function init(){
     });
 
 
+    //var heat = L.heatLayer(items, {radius: 17, blur: 10});
+
+
+
     var controlLayer = L.control.layers({
         'OpenStreetMap': osmLayer,
         'Wikimedia': mainLayer,
         'Stamen': stamenToner,
-        'GrayScale': grayScaleLayer
+        'WaterColor': waterColor,
+        'GrayScale': grayScaleLayer,
+        'Satellite': satelliteLayer
     }, {
+        'Temperature': tempLayer,
         'Travel time': isochronesOverlay,
         'Transport': transportLayer,
         'Bars': barsOverlay,
         'Station': stationJourneyLayer,
+        'Time dimension': timeDimensionHeatmap
     })
-    map.addLayer(mainLayer);
+    
+    mainLayer.addTo(map);
     controlLayer.addTo(map);
     var customIcon = L.icon({
         iconUrl: 'assets/images/devoxxMarker.png',
-        //shadowUrl: 'icon-shadow.png',
         iconSize:     [64, 64], // taille de l'icone
-        //shadowSize:   [50, 64], // taille de l'ombre
         iconAnchor:   [32, 64], // point de l'icone qui correspondra à la position du marker
-        //shadowAnchor: [32, 64],  // idem pour l'ombre
         popupAnchor:  [0, -64] // point depuis lequel la popup doit s'ouvrir relativement à l'iconAnchor
     });
     var devoxxMarker = L.marker(

@@ -14,6 +14,33 @@ function toMin(durationInSec) {
 
 
 
+function journeyLine() {
+    var multiLines = journey.journeys.map(j => {
+        var latlngs = j.sections.filter(s => s.type !== "waiting").map(s => {
+            if (s.geojson !== undefined) {
+                return s.geojson.coordinates.map(coord => {
+                    return [coord[1], coord[0]]
+                })
+            }
+        })
+        var line = L.polyline(latlngs, {
+            opacity: 0.8,
+            dashArray: "2 12",
+            color: 'yellow',
+            weight: 10,
+            attribution: '&copy; Navitia'
+        }).bindPopup('Duration : ' + toMin(j.duration));
+        line.on('mouseover', function () {
+            line.setStyle({color: 'red'})
+        })
+        line.on('mouseout', function () {
+            line.setStyle({color: 'yellow'})
+        })
+        return line
+    })
+    return L.layerGroup(multiLines);
+}
+
 function barsLayer() {
     var markersBar = bars.map(bar => {
         return L.marker(
@@ -61,34 +88,6 @@ function legend() {
     return legend;
 }
 
-function journeyLine() {
-    console.log(journey.journeys.length)
-    var multiLines = journey.journeys.map(j => {
-        var latlngs = j.sections.filter(s => s.type !== "waiting").map(s => {
-            if (s.geojson !== undefined) {
-                return s.geojson.coordinates.map(coord => {
-                    return [coord[1], coord[0]]
-                })
-            }
-        })
-        var line = L.polyline(latlngs, {
-            opacity: 0.8,
-            dashArray: "2 12",
-            color: 'yellow',
-            weight: 10,
-            attribution: '&copy; Navitia'
-        }).bindPopup('Duration : ' + toMin(j.duration));
-        line.on('mouseover', function () {
-            line.setStyle({color: 'red'})
-        })
-        line.on('mouseout', function () {
-            line.setStyle({color: 'yellow'})
-        })
-        return line
-    })
-    return L.layerGroup(multiLines);
-}
-
 function init(){
     // Palais des Congrès Location
     var lat = 48.877179;
@@ -99,22 +98,8 @@ function init(){
     var stationLat = 48.839268;
     var stationLng = 2.320752;
 
-    var zoomLevel = 13;
-    var map = L.map('map').setView([lat, lng], zoomLevel);
-    var stationMarker = L.marker(
-        [stationLat, stationLng],
-        {
-            title: "Montparnasse"
-        }
-    ).bindPopup('Hello station');
-    var circle = L.circle([stationLat, stationLng], 2000, {color: 'red'});
-
-    var journeyOverlay = journeyLine();
-
-    var stationJourneyLayer = L.layerGroup([circle, journeyOverlay, stationMarker])
-
-    var timeDimensionHeatmap = L.timeDimension.layer.HeatMap({attribution: '&copy; <a href="https://opendata.paris.fr">OpenDataParis</a> contributors',});
-
+    var zoomLevel = 12;
+    
     
     /*
     Tiles are numbered as {z}/{x}/{y} or {z}/{x}/{y}{r}, where
@@ -124,33 +109,15 @@ function init(){
         - r is for retina screen
     */
    
-    /*var tempLayer = L.tileLayer('https://c.tile.openweathermap.org/map/temp/{z}/{x}/{y}.png?appid=06aac0fd4ba239a20d824ef89602f311', {
-        attribution: '&copy; <a href="https://openweathermap.org">OpenWeatherMap</a> contributors',
-        opacity: '0.5'
-    })*/
-    var tempLayer = L.tileLayer('https://a.sat.owm.io/vane/2.0/weather/TA2/{z}/{x}/{y}?appid=9de243494c0b295cca9337e1e96b00e2&fill_bound', {
-        attribution: '&copy; <a href="https://openweathermap.org">OpenWeatherMap</a> contributors'
-    })
+    
+    var map = L.map('map').setView([stationLat, stationLng], zoomLevel);
 
     // OpenStreetMap
     var osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 18
     });
-    // Wikimedia
-    var mainLayer = L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png', {
-        attribution: '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia</a>',
-        minZoom: 1,
-        maxZoom: 19
-    });
-    // Stamen Layer
-    var stamenToner = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {
-        attribution: 'Map tiles by Stamen Design, CC BY 3.0 — Map data © OpenStreetMap',
-        subdomains: 'abcd',
-        minZoom: 0,
-        maxZoom: 20,
-        ext: 'png'
-    });
+
     var waterColor =  L.tileLayer('http://b.tile.stamen.com/watercolor/{z}/{x}/{y}.png', {
         attribution: 'Map tiles by Stamen Design, CC BY 3.0 — Map data © OpenStreetMap',
         subdomains: 'abcd',
@@ -158,51 +125,45 @@ function init(){
         maxZoom: 20,
         ext: 'png'
     });
+
     // Gray Scale layer
     var grayScaleLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
         id: 'mapbox.light',
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'
     })
+
+    // Satellite layer
+    var satelliteLayer = L.tileLayer('http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'ESRI'
+    })
+
     
+    // Wikimedia
+    var mainLayer = L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png', {
+        attribution: '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia</a>',
+        minZoom: 1,
+        maxZoom: 19
+    });
+    mainLayer.addTo(map);
+
     // Public Transport
     var transportLayer = L.tileLayer('http://openptmap.org/tiles/{z}/{x}/{y}.png',{
         attribution: '&copy; <a href="http://openptmap.org/" target="_blank" rel="noopener noreferrer">OpenPTMap</a> / <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OSM Contributors</a>',
         maxZoom: 22,
     })
 
-    var barsOverlay = barsLayer()
-
-    var isochronesOverlay = isochronesLayer();                
-    var legendControl = legend()
-    isochronesOverlay.on('add', function() {
-        legendControl.addTo(map);
-    });
-    isochronesOverlay.on('remove', function() {
-        legendControl.remove();
-    });
-
-
-    //var heat = L.heatLayer(items, {radius: 17, blur: 10});
-
-
-
-    var controlLayer = L.control.layers({
-        'OpenStreetMap': osmLayer,
-        'Wikimedia': mainLayer,
-        'Stamen': stamenToner,
-        'WaterColor': waterColor,
-        'GrayScale': grayScaleLayer
-    }, {
-        'Temperature': tempLayer,
-        'Travel time': isochronesOverlay,
-        'Transport': transportLayer,
-        'Bars': barsOverlay,
-        'Station': stationJourneyLayer,
-        'Time dimension': timeDimensionHeatmap
-    })
     
-    mainLayer.addTo(map);
-    controlLayer.addTo(map);
+
+
+    // Station Marker
+    var stationMarker = L.marker(
+        [stationLat, stationLng],
+        {
+            title: "Gare Montparnasse"
+        }
+    ).bindPopup('Hello la gare');
+
+
     var customIcon = L.icon({
         iconUrl: 'assets/images/devoxxMarker.png',
         iconSize:     [64, 64], // taille de l'icone
@@ -213,7 +174,59 @@ function init(){
         [lat, lng],
         {icon: customIcon}
     );
-    devoxxMarker.bindPopup("<div class='devoxx-popup'>Devoxx is here ! <br><img src='assets/images/DevoxxLogo.png'></div>", {className: 'devoxx-popup-container'})
-    devoxxMarker.bindTooltip("<span>Devoxx Location (Kinepolis)</span>")
-    devoxxMarker.addTo(map);
+
+    devoxxMarker.bindPopup(
+        "<div class='devoxx-popup'>Devoxx is here ! <br><img src='assets/images/DevoxxLogo.png'></div>",
+        {className: 'devoxx-popup-container'}
+    )
+
+    //stationMarker.addTo(map)
+    devoxxMarker.addTo(map)
+
+    var circle = L.circle([stationLat, stationLng], 2000, {color: "red"})
+
+    var journeysLines = journeyLine()
+    
+
+    var stationLayerGroup = L.layerGroup([stationMarker, circle, journeysLines])
+
+    var legendIso = legend();
+    var isochrones = isochronesLayer();
+
+    isochrones.on('add', () => {
+        legendIso.addTo(map)
+    })
+
+    isochrones.on('remove', () => {
+        legendIso.remove();
+    })
+
+    var timeDimensionHeatmap = L.timeDimension.layer.HeatMap(
+        {
+            attribution: '&copy; <a href="https://opendata.paris.fr">OpenDataParis</a> contributors'
+        }
+    );
+
+    var tempLayer = L.tileLayer('https://a.sat.owm.io/vane/2.0/weather/TA2/{z}/{x}/{y}?appid=9de243494c0b295cca9337e1e96b00e2&fill_bound', {
+        attribution: '&copy; <a href="https://openweathermap.org">OpenWeatherMap</a> contributors'
+    })
+    
+    L.control.layers(
+        {
+            'Open Street Map' : osmLayer,
+            'Main' : mainLayer,
+            'Water Color': waterColor,
+            'Gray scale' : grayScaleLayer,
+            'Satellite': satelliteLayer
+        },
+        {
+            'Transport' : transportLayer,
+            'Station' : stationLayerGroup,
+            'Isochrones': isochrones,
+            'Bars' : barsLayer(),
+            'Temperature': tempLayer,
+            'Time dimension': timeDimensionHeatmap,
+        }
+        ).addTo(map)
+
 }

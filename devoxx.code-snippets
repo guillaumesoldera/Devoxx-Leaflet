@@ -1,0 +1,273 @@
+{
+	// Place your global snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"scope": "javascript,typescript",
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+	// }
+	"Bars_Layer": {
+		"scope": "javascript",
+		"prefix": "devoxx-bars-layergroup-snippet",
+		"body": [
+			"function barsLayer() {",
+				"    var markersBar = bars.map(bar => {",
+				"        return L.marker(",
+				"            [bar.geometry.location.lat,bar.geometry.location.lng],",
+				"            {",
+				"                title: bar.name",
+				"            }",
+				"        ).bindPopup(bar.name);",
+				"    })",
+				"    var markerClusterGroup = L.markerClusterGroup();",
+				"    markerClusterGroup.addLayers(markersBar)",
+				"    //return markerClusterGroup;",
+				"    return L.layerGroup(markersBar);",
+				"}"
+		],
+		"description": "Create layer for bars"
+	},
+	"Isochrones_Layer": {
+		"scope": "javascript",
+		"prefix": "devoxx-isochrones-layergroup-snippet",
+		"body": [
+			"function isochronesLayer() {",
+				"    var isochronesLayerGroup = isochrones.isochrones.map((iso, idx) => {",
+				"        const color = matchingGradient[idx];",
+				"        return L.geoJSON(iso.geojson, {",
+				"            style: {",
+				"                fillColor: color,",
+				"                weight: 1,",
+				"                opacity: 0.9,",
+				"                color: color,",
+				"                fillOpacity: 0.8,",
+				"            }, attribution: '&copy; Navitia'",
+				"        });",
+				"    })",
+				"    return L.layerGroup(isochronesLayerGroup);",
+				"}"
+		]
+	},
+	"Isochrones_Legend": {
+		"scope": "javascript",
+		"prefix": "devoxx-isochrones-legend-snippet",
+		"body": [
+			"function legend() {",
+				"    var legend = L.control({position: 'bottomright'});",
+				"    legend.onAdd = function (map) {",
+				"        var div = L.DomUtil.create('div', 'info legend');",
+				"        div.innerHTML = '<h4>Travel time legend</h4>'",
+				"        isochrones.isochrones.forEach((iso, idx, allTab) => {",
+				"            var text = toMin(iso.min_duration) + ' &dash; ' + toMin(iso.max_duration)",
+				"            div.innerHTML +=",
+				"            '<i style=\"background:' + matchingGradient[idx] + '\"></i> ' +",
+				"                text + (idx !== allTab.length - 1 ? '<br>' : '');",
+				"        })",
+				"        return div;",
+				"    };",
+				"    return legend;",
+				"}"
+		]
+	},
+	"Journey_Polylines": {
+		"scope": "javascript",
+		"prefix": "devoxx-journey-polylines-snippet",
+		"body": [
+			"function journeyLine() {",
+				"    var multiLines = journey.journeys.map(j => {",
+				"        var latlngs = j.sections.filter(s => s.type !== \"waiting\").map(s => {",
+				"            if (s.geojson !== undefined) {",
+				"                return s.geojson.coordinates.map(coord => {",
+				"                    return [coord[1], coord[0]]",
+				"                })",
+				"            }",
+				"        })",
+				"        var line = L.polyline(latlngs, {",
+				"            opacity: 0.8,",
+				"            dashArray: \"2 12\",",
+				"            color: 'yellow',",
+				"            weight: 10,",
+				"            attribution: '&copy; Navitia'",
+				"        }).bindPopup('Duration : ' + toMin(j.duration));",
+				"        line.on('mouseover', function () {",
+				"            line.setStyle({color: 'red'})",
+				"        })",
+				"        line.on('mouseout', function () {",
+				"            line.setStyle({color: 'yellow'})",
+				"        })",
+				"        return line",
+				"    })",
+				"    return L.layerGroup(multiLines);",
+				"}"
+		]
+	},
+	"OSM_Layer": {
+		"scope": "javascript",
+		"prefix": "devoxx-osm-layer-snippet",
+		"body": [
+			"// OpenStreetMap",
+			"var osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {",
+			"    attribution: '&copy; <a href=\"https://osm.org/copyright\">OpenStreetMap</a> contributors',",
+			"    maxZoom: 18",
+			"});"
+		]
+	},
+	"Main_Layer": {
+		"scope": "javascript",
+		"prefix": "devoxx-main-layer-snippet",
+		"body": [
+			"// Wikimedia",
+			"var mainLayer = L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png', {",
+			"    attribution: '<a href=\"https://wikimediafoundation.org/wiki/Maps_Terms_of_Use\">Wikimedia</a>',",
+			"    minZoom: 1,",
+			"    maxZoom: 19",
+			"});"
+		]
+	},
+	"Satellite_Layer": {
+		"scope": "javascript",
+		"prefix": "devoxx-satellite-layer-snippet",
+		"body": [
+			"// Satellite layer",
+			"var satelliteLayer = L.tileLayer('http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {",
+			"    attribution: 'ESRI'",
+			"})"
+		]
+	},
+	"Stamen_Layer": {
+		"scope": "javascript",
+		"prefix": "devoxx-stamen-layer-snippet",
+		"body": [
+			"// Stamen Layer",
+			"var stamenToner = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {",
+			"    attribution: 'Map tiles by Stamen Design, CC BY 3.0 — Map data © OpenStreetMap',",
+			"    subdomains: 'abcd',",
+			"    minZoom: 0,",
+			"    maxZoom: 20,",
+			"    ext: 'png'",
+			"});",
+		]
+	},
+	"WaterColor_Layer": {
+		"scope": "javascript",
+		"prefix": "devoxx-water-color-layer-snippet",
+		"body": [
+			"var waterColor =  L.tileLayer('http://b.tile.stamen.com/watercolor/{z}/{x}/{y}.png', {",
+			"    attribution: 'Map tiles by Stamen Design, CC BY 3.0 — Map data © OpenStreetMap',",
+			"    subdomains: 'abcd',",
+			"    minZoom: 0,",
+			"    maxZoom: 20,",
+			"    ext: 'png'",
+			"});"
+		]
+	},
+	"GrayScale_Layer": {
+		"scope": "javascript",
+		"prefix": "devoxx-grayscale-layer-snippet",
+		"body": [
+			"// Gray Scale layer",
+			"var grayScaleLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {",
+			"    id: 'mapbox.light',",
+			"    attribution: 'Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>'",
+			"})"
+		]
+	},
+	"TimeDimension_HeatMap": {
+		"scope": "javascript",
+		"prefix": "devoxx-timedimension-heatmap",
+		"body": [
+			"var timeDimensionHeatmap = L.timeDimension.layer.HeatMap(",
+			"    {",
+			"        attribution: '&copy; <a href=\"https://opendata.paris.fr\">OpenDataParis</a> contributors'",
+			"    }",
+			");"
+		]
+	},
+	"Temperature_Layer": {
+		"scope": "javascript",
+		"prefix": "devoxx-temperature-layer",
+		"body": [
+			"var tempLayer = L.tileLayer('https://a.sat.owm.io/vane/2.0/weather/TA2/{z}/{x}/{y}?appid=9de243494c0b295cca9337e1e96b00e2&fill_bound', {",
+			"    attribution: '&copy; <a href=\"https://openweathermap.org\">OpenWeatherMap</a> contributors'",
+			"})"
+		]
+	},
+	"PublicTransport_Layer": {
+		"scope": "javascript",
+		"prefix": "devoxx-transport-public-layer-snippet",
+		"body": [
+			"// Public Transport",
+			"var transportLayer = L.tileLayer('http://openptmap.org/tiles/{z}/{x}/{y}.png',{",
+			"    attribution: '&copy; <a href=\"http://openptmap.org/\" target=\"_blank\" rel=\"noopener noreferrer\">OpenPTMap</a> / <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\" rel=\"noopener noreferrer\">OSM Contributors</a>',",
+			"    maxZoom: 22,",
+			"})"
+		]
+	},
+	"Simple_Marker": {
+		"scope": "javascript",
+		"prefix": "devoxx-simple-marker-snipper",
+		"body": [
+			"L.marker(",
+        	"\t[${1:lat}, ${2:lng}]",
+    		");",
+		]
+	},
+	"Station_Marker": {
+		"scope": "javascript",
+		"prefix": "devoxx-station-marker-snippet",
+		"body": [
+			"// Station Marker",
+			"var stationMarker = L.marker(",
+        	"\t[stationLat, stationLng],",
+        	"\t{",
+            "\t\ttitle: \"Gare Montparnasse\"",
+        	"\t}",
+    		");",
+		]
+	},
+	"Devoxx_Marker": {
+		"scope": "javascript",
+		"prefix": "devoxx-marker-snippet",
+		"body": [
+			"var customIcon = L.icon({",
+			"\ticonUrl: 'assets/images/devoxxMarker.png',",
+			"\ticonSize:     [64, 64], // taille de l'icone",
+			"\ticonAnchor:   [32, 64], // point de l'icone qui correspondra à la position du marker",
+			"\tpopupAnchor:  [0, -64] // point depuis lequel la popup doit s'ouvrir relativement à l'iconAnchor",
+			"});",
+			"var devoxxMarker = L.marker(",
+			"\t[lat, lng],",
+			"\t{icon: customIcon}",
+			");",
+		]
+	},
+	"Controls_Layer": {
+		"scope": "javascript",
+		"prefix": "devoxx-controls-layer-snippet",
+		"body": [
+			"L.control.layers(",
+			"${1:layers}",
+			"${2:overlays}",
+			")"
+		]
+	},
+	"Devoxx_Marker_Popup": {
+		"scope": "javascript",
+		"prefix": "devoxx-marker-popup-snippet",
+		"body": [
+			"devoxxMarker.bindPopup(",
+			"\t\"<div class='devoxx-popup'>Devoxx is here ! <br><img src='assets/images/DevoxxLogo.png'></div>\",",
+			"\t{className: 'devoxx-popup-container'}",
+			")"
+		]
+	}
+}

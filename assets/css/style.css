@@ -15,7 +15,7 @@ nav {
     padding: 0 10px;
     z-index: 10;
     margin-bottom: 2px;
-    background-color: #313741;
+    background-color: #ea633a;
 }
 h1 {
     text-align: center;
@@ -31,6 +31,7 @@ h1 {
 .logo {
     max-height: 58px;
     width: 33%;
+    max-width: 58px;
 }
 @media screen and (min-width: 992px) {
     .logo {
@@ -46,20 +47,35 @@ h1 {
     justify-content: center;
 }
 .twitter-account {
-    color: #6BB884;
+    color: #fff;
     font-size: 18px;
 }
 #map {
     width: 100%;
     height: 100%;
 }
-.devoxx-popup-container {
+.jsc-popup-container {
     width: 200px;
     font-size: 21px;
 }
-.devoxx-popup-container .leaflet-popup-content-wrapper, .devoxx-popup-container .leaflet-popup-tip {
-    background-color: black;
+.jsc-popup-container .leaflet-popup-content-wrapper, .jsc-popup-container .leaflet-popup-tip {
+    background-color: #79b3af;
     color: white
+}
+
+
+.jsc-popup-container a.leaflet-popup-close-button {
+    color: #fff
+}
+
+.jsc-popup {
+    display: flex;
+    flex-direction: column;
+}
+
+.jsc-popup img {
+    width: 80px;
+    align-self: center;
 }
 .info {
     padding: 6px 8px;

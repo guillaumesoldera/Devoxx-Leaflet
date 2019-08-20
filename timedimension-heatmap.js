@@ -4,7 +4,7 @@ L.TimeDimension.Layer.HeatMap = L.TimeDimension.Layer.extend({
         var heatmapCfg = this._getHeatmapOptions(options.heatmatOptions || {});
         var layer = L.heatLayer([], heatmapCfg);
         this._timeDimension = L.timeDimension({
-            timeInterval: '2012-07-01/2018-09-01',
+            timeInterval: '2012-07-01/2019-02-01',
             period: 'P1M',
             currentTime: 1343826000000
         })

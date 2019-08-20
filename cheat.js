@@ -88,7 +88,50 @@ function journeyLine() {
     return L.layerGroup(multiLines);
 }
 
+var positionCircle = undefined;
+L.Control.Geoloc = L.Control.extend({
+    onAdd: (mapRef) => {
+        var div = L.DomUtil.create('div', 'geolocation-container');
+        var button = L.DomUtil.create('button', '', div);
+        button.innerHTML = "Locate";
+        button.onclick = () => {
+            mapRef.locate();
+            button.disabled = true;
+        }
+        mapRef.on('locationfound', (locEvent) => {
+            var point = locEvent.latlng;
+            var radius = locEvent.accuracy;
+            mapRef.panTo(point);
+            mapRef.setZoom(16, {animate: true})
+            if (positionCircle) {
+                positionCircle.remove();
+            }
+            positionCircle = L.circle(point, radius).addTo(mapRef).bindPopup('Vous êtes dans cette zone').openPopup();
+            button.disabled = false;
+        })
+        return div;
+    }
+})
+
+L.control.geoloc = (opts) => {
+    return new L.Control.Geoloc(opts);
+}
+
 function init(){
+
+    // 1. Init map
+    // 2. Layers
+    // 3. Layer as overlay (Transport public)
+    // 4. Marker simple avec Popup
+    // 5. Marker custom avec popup custom
+    // 6. Circle
+    // 7. LayerGroup (marker + circle)
+    // 8. Polylines
+    // 9. GeoJSON
+    // 10. Bars (plugin)
+    // 11. Control Geoloc (extend)
+    // 12. Plugin custom (time dimension + heatmap)
+
     // Palais des Congrès Location
     var lat = 48.877179;
     var lng = 2.280502;
@@ -189,6 +232,37 @@ function init(){
         legendControl.remove();
     });
 
+
+    var geolocButton = L.control({'position': 'topleft'})
+    geolocButton.onAdd = () => {
+        var div = L.DomUtil.create('div', 'geoloc');
+        var button = L.DomUtil.create('button', '', div)
+        button.innerHTML = "Locate";
+        button.onclick = () => {
+            map.locate();
+            button.innerHTML = 'En cours...';
+            button.disabled = true;
+        }
+
+        map.on('locationfound', (locEvent) => {
+            var radius = locEvent.accuracy / 2;
+            map.panTo(locEvent.latlng);
+            map.setZoom(16, {animate: true})
+            L.marker(locEvent.latlng).addTo(map)
+                .bindPopup("You are within " + radius + " meters from this point").openPopup();
+            L.circle(locEvent.latlng, radius).addTo(map);
+            button.innerHTML = "Locate";
+            button.disabled = false;
+        })
+
+        map.on('locationerror', (error) => {
+            window.alert('Sorry bro...');
+            button.innerHTML = "Locate";
+            button.disabled = false;
+        })
+
+        return div;
+    }
 
     //var heat = L.heatLayer(items, {radius: 17, blur: 10});
 
